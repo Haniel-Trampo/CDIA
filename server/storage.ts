@@ -156,7 +156,13 @@ export class MemStorage implements IStorage {
     const existing = this.properties.get(id);
     if (!existing) return undefined;
     
-    const updated: Property = { ...existing, ...updates };
+    const updated: Property = { 
+      ...existing, 
+      ...updates,
+      zipCode: updates.zipCode !== undefined ? updates.zipCode : existing.zipCode,
+      number: updates.number !== undefined ? updates.number : existing.number,
+      complement: updates.complement !== undefined ? updates.complement : existing.complement
+    };
     this.properties.set(id, updated);
     return updated;
   }

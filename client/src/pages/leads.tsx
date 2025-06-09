@@ -200,6 +200,9 @@ export default function Leads() {
                     Região Interesse
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Preferências
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Valor Entrada
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -210,7 +213,7 @@ export default function Leads() {
               <tbody className="bg-white divide-y divide-gray-200">
                 {leads.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="px-6 py-12 text-center text-gray-500">
+                    <td colSpan={8} className="px-6 py-12 text-center text-gray-500">
                       Nenhum lead encontrado. Adicione seu primeiro lead para começar.
                     </td>
                   </tr>

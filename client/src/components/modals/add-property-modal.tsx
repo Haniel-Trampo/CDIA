@@ -240,16 +240,66 @@ export function AddPropertyModal({ open, onOpenChange }: AddPropertyModalProps) 
           <div>
             <h4 className="text-lg font-medium text-gray-900 mb-4">Localização e Imagens</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="md:col-span-2">
-                <Label htmlFor="address">Endereço Completo</Label>
+              <div>
+                <Label htmlFor="zipCode">CEP</Label>
                 <Input
-                  id="address"
-                  {...form.register("address")}
-                  placeholder="Rua das Flores, 123 - Vila Madalena, São Paulo - SP"
+                  id="zipCode"
+                  {...form.register("zipCode")}
+                  placeholder="12345-678"
+                  onChange={(e) => {
+                    form.setValue("zipCode", e.target.value);
+                    handleZipCodeChange(e.target.value);
+                  }}
                 />
-                {form.formState.errors.address && (
-                  <p className="text-sm text-destructive mt-1">{form.formState.errors.address.message}</p>
-                )}
+              </div>
+              <div>
+                <Label htmlFor="street">Rua</Label>
+                <Input
+                  id="street"
+                  {...form.register("street")}
+                  placeholder="Rua das Flores"
+                />
+              </div>
+              <div>
+                <Label htmlFor="number">Número</Label>
+                <Input
+                  id="number"
+                  {...form.register("number")}
+                  placeholder="123"
+                />
+              </div>
+              <div>
+                <Label htmlFor="complement">Complemento</Label>
+                <Input
+                  id="complement"
+                  {...form.register("complement")}
+                  placeholder="Apto 45, Bloco B"
+                />
+              </div>
+              <div>
+                <Label htmlFor="neighborhood">Bairro</Label>
+                <Input
+                  id="neighborhood"
+                  {...form.register("neighborhood")}
+                  placeholder="Centro"
+                />
+              </div>
+              <div>
+                <Label htmlFor="city">Cidade</Label>
+                <Input
+                  id="city"
+                  {...form.register("city")}
+                  placeholder="São Paulo"
+                />
+              </div>
+              <div>
+                <Label htmlFor="state">Estado</Label>
+                <Input
+                  id="state"
+                  {...form.register("state")}
+                  placeholder="SP"
+                  maxLength={2}
+                />
               </div>
               <div>
                 <Label htmlFor="builder">Construtora Responsável</Label>

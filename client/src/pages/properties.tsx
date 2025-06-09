@@ -217,7 +217,11 @@ export default function Properties() {
                 <div className="flex items-start justify-between mb-3">
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900">{property.title}</h3>
-                    <p className="text-sm text-gray-600">{property.address}</p>
+                    <p className="text-sm text-gray-600">
+                      {[property.street, property.number, property.neighborhood, property.city, property.state]
+                        .filter(Boolean)
+                        .join(', ')}
+                    </p>
                   </div>
                   <Button variant="ghost" size="sm">
                     <Heart size={16} />
