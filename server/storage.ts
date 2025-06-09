@@ -89,9 +89,15 @@ export class MemStorage implements IStorage {
       maritalStatus: insertLead.maritalStatus || null,
       grossIncome: insertLead.grossIncome || null,
       interestRegions: insertLead.interestRegions || null,
-      interestedProperty: insertLead.interestedProperty || null,
+      interestedProperties: insertLead.interestedProperties || null,
       downPayment: insertLead.downPayment || null,
-      documents: insertLead.documents || null
+      documents: insertLead.documents || null,
+      preferredRooms: insertLead.preferredRooms || null,
+      preferredBathrooms: insertLead.preferredBathrooms || null,
+      preferredGarages: insertLead.preferredGarages || null,
+      preferredAmenities: insertLead.preferredAmenities || null,
+      hasDependents: insertLead.hasDependents || false,
+      dependents: insertLead.dependents || null
     };
     this.leads.set(id, lead);
     return lead;
@@ -131,6 +137,9 @@ export class MemStorage implements IStorage {
       condominiumFee: insertProperty.condominiumFee || null,
       iptu: insertProperty.iptu || null,
       builder: insertProperty.builder || null,
+      zipCode: insertProperty.zipCode || null,
+      number: insertProperty.number || null,
+      complement: insertProperty.complement || null,
       bedrooms: insertProperty.bedrooms || null,
       bathrooms: insertProperty.bathrooms || null,
       garages: insertProperty.garages || null,

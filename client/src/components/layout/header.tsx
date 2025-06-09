@@ -36,12 +36,7 @@ export function Header() {
           <h2 className="text-2xl font-bold text-gray-900">{currentPage.title}</h2>
           <p className="text-sm text-gray-600">{currentPage.subtitle}</p>
         </div>
-        <div className="flex items-center space-x-4">
-          <Button className="bg-primary hover:bg-primary/90">
-            <Plus className="mr-2" size={16} />
-            <span>Ação Rápida</span>
-          </Button>
-        </div>
+
       </div>
     </header>
   );

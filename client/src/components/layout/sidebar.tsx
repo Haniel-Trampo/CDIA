@@ -26,25 +26,27 @@ export function Sidebar({ collapsed, onToggle }: SidebarProps) {
     )}>
       {/* Logo Section */}
       <div className="p-6 border-b border-gray-200">
-        <div className="flex items-center">
-          <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-            <Building className="text-primary-foreground" size={20} />
-          </div>
-          {!collapsed && (
-            <div className="ml-3">
-              <h1 className="text-xl font-bold text-gray-900">RealEstate</h1>
-              <p className="text-sm text-gray-500">CRM Imobiliário</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center">
+            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+              <Building className="text-primary-foreground" size={20} />
             </div>
-          )}
+            {!collapsed && (
+              <div className="ml-3">
+                <h1 className="text-xl font-bold text-gray-900">RealEstate</h1>
+                <p className="text-sm text-gray-500">CRM Imobiliário</p>
+              </div>
+            )}
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onToggle}
+            className="p-2"
+          >
+            <Menu className="text-gray-600" size={16} />
+          </Button>
         </div>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={onToggle}
-          className="absolute top-6 right-6 p-2"
-        >
-          <Menu className="text-gray-600" size={16} />
-        </Button>
       </div>
 
       {/* Navigation */}

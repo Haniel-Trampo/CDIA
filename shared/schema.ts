@@ -13,9 +13,17 @@ export const leads = pgTable("leads", {
   maritalStatus: text("marital_status"),
   grossIncome: decimal("gross_income"),
   interestRegions: text("interest_regions").array(),
-  interestedProperty: text("interested_property"),
+  interestedProperties: text("interested_properties").array(),
   downPayment: decimal("down_payment"),
   documents: text("documents").array(),
+  // Property preferences
+  preferredRooms: integer("preferred_rooms"),
+  preferredBathrooms: integer("preferred_bathrooms"),
+  preferredGarages: integer("preferred_garages"),
+  preferredAmenities: text("preferred_amenities").array(),
+  // Dependents
+  hasDependents: boolean("has_dependents").default(false),
+  dependents: text("dependents").array(), // JSON array of {name, birthCertificate}
 });
 
 export const properties = pgTable("properties", {
@@ -29,7 +37,15 @@ export const properties = pgTable("properties", {
   condominiumFee: decimal("condominium_fee"),
   iptu: decimal("iptu"),
   builder: text("builder"),
-  address: text("address").notNull(),
+  // Detailed address
+  zipCode: text("zip_code"),
+  street: text("street").notNull(),
+  number: text("number"),
+  complement: text("complement"),
+  neighborhood: text("neighborhood").notNull(),
+  city: text("city").notNull(),
+  state: text("state").notNull(),
+  // Property details
   bedrooms: integer("bedrooms"),
   bathrooms: integer("bathrooms"),
   garages: integer("garages"),
@@ -68,9 +84,15 @@ export const insertLeadSchema = createInsertSchema(leads).omit({
   maritalStatus: z.string().nullable().optional(),
   grossIncome: z.string().nullable().optional(),
   interestRegions: z.array(z.string()).nullable().optional(),
-  interestedProperty: z.string().nullable().optional(),
+  interestedProperties: z.array(z.string()).nullable().optional(),
   downPayment: z.string().nullable().optional(),
   documents: z.array(z.string()).nullable().optional(),
+  preferredRooms: z.number().nullable().optional(),
+  preferredBathrooms: z.number().nullable().optional(),
+  preferredGarages: z.number().nullable().optional(),
+  preferredAmenities: z.array(z.string()).nullable().optional(),
+  hasDependents: z.boolean().nullable().optional(),
+  dependents: z.array(z.string()).nullable().optional(),
 });
 
 export const insertPropertySchema = createInsertSchema(properties).omit({
@@ -83,6 +105,9 @@ export const insertPropertySchema = createInsertSchema(properties).omit({
   condominiumFee: z.string().nullable().optional(),
   iptu: z.string().nullable().optional(),
   builder: z.string().nullable().optional(),
+  zipCode: z.string().nullable().optional(),
+  number: z.string().nullable().optional(),
+  complement: z.string().nullable().optional(),
   bedrooms: z.number().nullable().optional(),
   bathrooms: z.number().nullable().optional(),
   garages: z.number().nullable().optional(),
