@@ -1,0 +1,161 @@
+
+O projeto é um aplicativo CRM, voltado para o mercado imobiliário, que será utilizado para otimizar as prospecções e para utilizar eles com um chat integrado no app que fara o envio e recebimento de mensagens via whatsapp, utilizando um docker do N8N com api nao oficial do Waha.
+
+###### ESTRUTURA DO APP
+
+A estrutura do app deve ser obrigatoriamente separada por pastas que serão, backend, frontend, docker. Cada pagina criada deve ter sua propria pasta no frontend e no backend, e cada menu, recurso, função ou arquivo que pode ser reutilizado em mais de uma pagina para outras funções, devera ficar em uma pasta separada chamada "reutilizaveis", onde devera também ter dentro as pastas "backend" e "frontend", assim criando apenas a importação desses arquivos em outros para reutilizar codigos como mapas, menus, formulários, botões, catalogos e etc..
+
+## APLICATIVO
+
+O aplicativo será criado usando o ELECTRON, deve ter um design moderno e intuitivo, mantendo cores profissionais e que deem modernidade ao app. Ele deve conter um menu lateral esquerdo fixo, que pode ser retrátil exibindo apenas os icones do menu. nesse menu lateral esquerdo deve conter todas as paginas do app. as paginas são : 
+
+- Dashboard
+- Leads
+- Chat
+- Imoveis
+- Vendas
+
+Toda a parte do docker, waha, n8n será criada por fora, apenas implemente as conexões.
+
+## PAGINA - DASHBOARD
+
+A pagina dashboard será uma visão geral de quantas mensagens, vendas, imoveis cadastrados, clientes novos adicionados e outras informações em gráficos e menus intuitivos foram enviadas e adicionadas nos periodos que poderá ser definido em um filtro de : 1 dia, 7 dias , 14 dias, 1 mes, 3 meses, 6 meses, 1 ano e todos o periodo.
+será completamente moderno e intuitivo, cheio de gráfico e informações de forma organizada e intuitiva para o usuário ter informações gerais.
+
+## PAGINA - LEADS :
+
+Botões topo: 
+- Importar 
+- Adicionar manualmente
+
+Explicação:
+ Os clientes que poderão ser importados via XLSL, CSV ou JSON, ou criado manualmente. Ao criar um novo lead manualmente ou editar um lead já criado, devera exibir uma pagina flutuante, essa pagina devera conter informações como :
+
+OBRIGATÓRIOS:
+
+  - ORIGEM DO LEAD
+  - NOME
+  - TELEFONE
+
+OPCIONAIS:
+
+- STATUS ATUAL DE NEGOCIAÇÃO
+- EMAIL
+- TIPO PROFISSIONAL (CLT, MEI ...)
+- ESTADO CIVIL
+- RENDA BRUTA
+- REGIÕES DE INTERESSE
+- IMOVEL INTERESSADO
+- VALOR DE ENTRADA DISPONIVEL
+- DEPENDENTES ( com opção de adicionar mais de 1 dependente, todos devem conter uma caixa para o nome e envio de certidão de nascimento)
+- DOCUMENTOS (RG/CNH, COMPROVANTE DE RESIDENCIA, CARTEIRA DE TRABALHO, EXTRATOS BANCÁRIOS, CONTRA CHEQUES, CERTIDÃO DE NASCIMENTO/CASAMENTO, DECLARAÇÃO DE IMPOSTO DE RENDA)
+
+---
+###### MEIO DA PAGINA
+
+O meio da pagina deve conter a lista de todos os clientes adicionados e importados, tendo acima de todos os nomes, um filtro para exibir apenas os clientes filtrados ou todos os clientes disponíveis independente do filtro. 
+Ao lado de cada nome de cliente da lista, deve conter as seguintes informações, em forma de tabela sem linhas,:
+- Status do cliente
+- Origem do Lead
+- Imóvel interessado
+- Regiões de interesse
+- Valor de entrada disponivel (como opções de : o valor definido pelo cliente, ainda nao definido ou Nenhuma)
+
+Os clientes poderão ser filtrados pelos status atuais de negociação dele, clientes novos adicionados que nunca foi enviado nenhuma mensagem, clientes arquivados por nao estar mais interessado em imoveis e clientes possivelmente investidores.
+
+Botões : 
+- Checkbox ao lado de cada cliente
+- Editar lead
+- Atualizar Status da negociação
+- Histórico de Atualizações
+
+Ao clicar no nome do cliente, deve abrir uma pagina flutuante contendo as informações do cliente e botões para : habilitar a edição do cliente e excluir o cliente.
+
+
+## PAGINA - CHAT : 
+
+A pagina chat será um chat embutido no app que terá filtragem da lista de clientes, chat para interação com clientes que enviara e receberá mensagens via Whatsapp pelo docker do N8N e api do Whatsapp usando WAHA e um menu lateral direito onde deverá conter opções no topo do menu, essas opções mudarão o conteúdo do menu, terá opções de conversar com IA usando o contexto da conversa aberta do cliente sugerindo 3 ou mais opções de mensagem para continuar a conversa, a lista da informação atual do perfil do cliente aberto, que poderá ser alterada em tempo real salvando no banco de dados do cliente e uma opção de lista de imoveis disponiveis, com filtros de regiões, valores, quantidade de cômodos.
+
+###### TOPO :
+no topo um Filtro dos clientes exibidos na lista de lead, devera conter as opções de filtro :
+
+- Status do Cliente
+- Regiões de interesse (Mostrando em lista todas as Regiões já cadastradas no banco de dados)
+- Imoveis de interesse (Exibindo imoveis de acordo com a região de interesse selecionada caso ela for filtrada)
+
+###### MEIO A ESQUERDA :
+
+Terá a lista de clientes filtradas, exibindo todos os clientes que foram filtrados.
+
+
+###### MEIO NO CENTRO :
+
+Será o chat do cliente selecionado, deverá conter cores diferentes do chat enviado e recebido do cliente, também conter opções de envio de arquivo, campo de inserir o texto, botão de enviar o texto, barra de scroll de conversa, pesquisa de mensagem por texto e data. acima do chat deve conter o nome do cliente, status dele, categoria, data da ultima mensagem enviada.
+
+Também devera ter um botão chamado "Sugerir Imóvel", que ao clicar, abrirá uma pagina flutuante, onde poderá selecionar um ou mais imoveis, e clicar em um botão para gerar uma descrição engajadora, que pegara o teor de toda a conversa com o cliente e dos imoveis selecionados e fará uma descrição profissional para enviar em uma ou mais mensagens os imoveis com texto persuasivo para venda e engajar o cliente a enviar a documentação caso ele ainda não tenha enviado.
+
+###### MEIO A ESQUERDA:
+
+terá o menu onde terá 3 opções selecionáveis no topo do menu (futuramente pode conter mais opções) :
+- Sugestões IA
+- Perfil do Cliente
+- Catalogo de imoveis
+
+
+No Sugestões de IA, tera um chat que usará a API do GEMINI para dar sugestões de continuidade de conversa com cliente, essas sugestões virão como botões que poderão ser clicados e quando selecionados, enviarão a mensagem para o cliente que o chat tiver aberto. Poderá também conversar e discutir as opções que foram sugeridas, além de tirar duvidas em tempo real sobre algo que o cliente falou ou a conversa deu a entender.
+
+No perfil do cliente deverá ter todas as informações do cliente selecionado, podendo ser alterados em tempo real.
+
+Catalogo de imoveis deverá exibir todos os imoveis catalogados, quando clicado em um card de um imóvel, exibir em uma pagina flutuante as informações do imóvel, imagens e descrições. Poderá segurar e arrastar o card do imóvel para o chat do cliente, para enviar para o cliente os detalhes do imóvel.
+
+
+## PAGINA - IMOVEIS
+
+A pagina imoveis deve conter todo o catalogo dos imoveis, botão para importar imoveis de CSV, XLSL ou JSON e botão para adicionar manualmente, também deve conter um filtro dos imoveis no topo da pagina para exibir no catalogo apenas os imoveis filtrados.
+
+###### TOPO 
+
+Deve conter os botões de importar ou adicionar imoveis manualmente. Clicar no botão de importar deve abrir apenas a aba para importar o arquivo. Clicar no botão de adicionar manualmente deve abrir uma pagina flutuante contendo as seguintes informações : 
+
+- Titulo do Imovel
+- Tipo de Imovel
+- Codigo do Imovel
+- Descrição
+- Valor de venda
+- Valor de Avaliação
+- Condominio
+- IPTU
+- Construtora Responsavel
+- Endereço completo do imovel
+- Mapa do endereço (Usando o LOCATIONIQ)
+- Caracteristica do imovel ( metros quadrados, comodos, garagens, tipo de acabamento, tipo de piso ..)
+- área de lazer
+- Botão para importar Imagens 
+- Pontos de referencia
+
+abaixo deve conter o Filtro dos imoveis contendo as opções : 
+- Tipo de imóvel
+- Venda ou aluguel
+- Valor
+- Região
+
+###### MEIO
+
+Deve conter o catalogo de imoveis exibindo eles em cards, deve conter nos cards :
+
+- checkbox de seleção para remover imoveis em massa
+- Imagens do Imovel com setinhas para mudar
+- informações das caracteristicas do imovel
+- Valor do imovel
+- Valor de avaliação
+- Região do imovel
+- Construtora
+- Iptu e condominio
+
+
+## PAGINA - VENDAS
+
+A pagina vendas deverá conter uma lista de todos os imoveis vendidos, nos filtros de periodo : 1 dia, 7 dias , 14 dias, 1 mes, 3 meses, 6 meses, 1 ano e todos o periodo.
+
+deverá também ter gráficos intuitivos para as informações filtradas, clientes e outras informações pertinentes.
+
