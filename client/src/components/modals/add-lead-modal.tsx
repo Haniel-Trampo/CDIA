@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { X, Save } from "lucide-react";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import { X, Save, Plus, Trash2 } from "lucide-react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
-import { insertLeadSchema, type InsertLead } from "@shared/schema";
+import { insertLeadSchema, type InsertLead, type Property } from "@shared/schema";
 
 interface AddLeadModalProps {
   open: boolean;
@@ -28,6 +28,13 @@ export function AddLeadModal({ open, onOpenChange }: AddLeadModalProps) {
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
+  const [selectedProperties, setSelectedProperties] = useState<string[]>([]);
+  const [hasDependents, setHasDependents] = useState(false);
+  const [dependents, setDependents] = useState<Array<{name: string, birthCertificate: string}>>([]);
+
+  const { data: properties = [] } = useQuery<Property[]>({
+    queryKey: ["/api/properties"],
+  });
 
   const form = useForm<InsertLead>({
     resolver: zodResolver(insertLeadSchema),
@@ -41,9 +48,15 @@ export function AddLeadModal({ open, onOpenChange }: AddLeadModalProps) {
       maritalStatus: "",
       grossIncome: "",
       interestRegions: [],
-      interestedProperty: "",
+      interestedProperties: [],
       downPayment: "",
       documents: [],
+      preferredRooms: undefined,
+      preferredBathrooms: undefined,
+      preferredGarages: undefined,
+      preferredAmenities: [],
+      hasDependents: false,
+      dependents: [],
     },
   });
 
@@ -75,6 +88,9 @@ export function AddLeadModal({ open, onOpenChange }: AddLeadModalProps) {
     const leadData = {
       ...data,
       interestRegions: selectedRegions,
+      interestedProperties: selectedProperties,
+      hasDependents: hasDependents,
+      dependents: dependents.map(d => JSON.stringify(d)),
     };
     createLeadMutation.mutate(leadData);
   };
@@ -91,12 +107,7 @@ export function AddLeadModal({ open, onOpenChange }: AddLeadModalProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center justify-between">
-            Adicionar Novo Lead
-            <Button variant="ghost" size="sm" onClick={() => onOpenChange(false)}>
-              <X size={16} />
-            </Button>
-          </DialogTitle>
+          <DialogTitle>Adicionar Novo Lead</DialogTitle>
         </DialogHeader>
         
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -238,7 +249,144 @@ export function AddLeadModal({ open, onOpenChange }: AddLeadModalProps) {
                   ))}
                 </div>
               </div>
+              <div className="md:col-span-2">
+                <Label>Imóveis de Interesse</Label>
+                <div className="max-h-32 overflow-y-auto border rounded-md p-3 mt-2">
+                  {properties.length === 0 ? (
+                    <p className="text-sm text-gray-500">Nenhum imóvel cadastrado</p>
+                  ) : (
+                    properties.map((property) => (
+                      <div key={property.id} className="flex items-center space-x-2 mb-2">
+                        <Checkbox
+                          id={`property-${property.id}`}
+                          checked={selectedProperties.includes(property.id.toString())}
+                          onCheckedChange={(checked) => {
+                            if (checked) {
+                              setSelectedProperties([...selectedProperties, property.id.toString()]);
+                            } else {
+                              setSelectedProperties(selectedProperties.filter(id => id !== property.id.toString()));
+                            }
+                          }}
+                        />
+                        <Label htmlFor={`property-${property.id}`} className="text-sm">
+                          {property.title}
+                        </Label>
+                      </div>
+                    ))
+                  )}
+                </div>
+              </div>
             </div>
+          </div>
+
+          {/* Property Preferences */}
+          <div className="border-b border-gray-200 pb-6">
+            <h4 className="text-lg font-medium text-gray-900 mb-4">Preferências de Imóvel</h4>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <Label htmlFor="preferredRooms">Quartos Preferidos</Label>
+                <Input
+                  id="preferredRooms"
+                  type="number"
+                  {...form.register("preferredRooms", { valueAsNumber: true })}
+                  placeholder="3"
+                />
+              </div>
+              <div>
+                <Label htmlFor="preferredBathrooms">Banheiros Preferidos</Label>
+                <Input
+                  id="preferredBathrooms"
+                  type="number"
+                  {...form.register("preferredBathrooms", { valueAsNumber: true })}
+                  placeholder="2"
+                />
+              </div>
+              <div>
+                <Label htmlFor="preferredGarages">Garagens Preferidas</Label>
+                <Input
+                  id="preferredGarages"
+                  type="number"
+                  {...form.register("preferredGarages", { valueAsNumber: true })}
+                  placeholder="1"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Dependents Section */}
+          <div className="border-b border-gray-200 pb-6">
+            <h4 className="text-lg font-medium text-gray-900 mb-4">Dependentes</h4>
+            <div className="flex items-center space-x-2 mb-4">
+              <Checkbox
+                id="hasDependents"
+                checked={hasDependents}
+                onCheckedChange={(checked) => setHasDependents(checked as boolean)}
+              />
+              <Label htmlFor="hasDependents">Cliente possui dependentes</Label>
+            </div>
+            
+            {hasDependents && (
+              <div className="space-y-4">
+                {dependents.map((dependent, index) => (
+                  <div key={index} className="border rounded-lg p-4 bg-gray-50">
+                    <div className="flex justify-between items-center mb-3">
+                      <h5 className="font-medium text-gray-900">Dependente {index + 1}</h5>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          const newDependents = dependents.filter((_, i) => i !== index);
+                          setDependents(newDependents);
+                        }}
+                      >
+                        <Trash2 size={16} />
+                      </Button>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div>
+                        <Label>Nome do Dependente</Label>
+                        <Input
+                          value={dependent.name}
+                          onChange={(e) => {
+                            const newDependents = [...dependents];
+                            newDependents[index].name = e.target.value;
+                            setDependents(newDependents);
+                          }}
+                          placeholder="Nome completo"
+                        />
+                      </div>
+                      <div>
+                        <Label>Certidão de Nascimento</Label>
+                        <Input
+                          type="file"
+                          accept=".pdf,.jpg,.jpeg,.png"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              const newDependents = [...dependents];
+                              newDependents[index].birthCertificate = file.name;
+                              setDependents(newDependents);
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    setDependents([...dependents, { name: "", birthCertificate: "" }]);
+                  }}
+                >
+                  <Plus className="mr-2" size={16} />
+                  Adicionar Dependente
+                </Button>
+              </div>
+            )}
           </div>
 
           {/* Form Actions */}

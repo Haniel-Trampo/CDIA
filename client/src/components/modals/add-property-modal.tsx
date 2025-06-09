@@ -35,7 +35,13 @@ export function AddPropertyModal({ open, onOpenChange }: AddPropertyModalProps) 
       condominiumFee: "",
       iptu: "",
       builder: "",
-      address: "",
+      zipCode: "",
+      street: "",
+      number: "",
+      complement: "",
+      neighborhood: "",
+      city: "",
+      state: "",
       bedrooms: 0,
       bathrooms: 0,
       garages: 0,
@@ -46,6 +52,24 @@ export function AddPropertyModal({ open, onOpenChange }: AddPropertyModalProps) 
       status: "disponivel",
     },
   });
+
+  const handleZipCodeChange = async (zipCode: string) => {
+    const cleanZipCode = zipCode.replace(/\D/g, "");
+    if (cleanZipCode.length === 8) {
+      try {
+        const response = await fetch(`https://viacep.com.br/ws/${cleanZipCode}/json/`);
+        const data = await response.json();
+        if (!data.erro) {
+          form.setValue("street", data.logradouro);
+          form.setValue("neighborhood", data.bairro);
+          form.setValue("city", data.localidade);
+          form.setValue("state", data.uf);
+        }
+      } catch (error) {
+        console.error("Erro ao buscar CEP:", error);
+      }
+    }
+  };
 
   const createPropertyMutation = useMutation({
     mutationFn: async (data: InsertProperty) => {
@@ -78,12 +102,7 @@ export function AddPropertyModal({ open, onOpenChange }: AddPropertyModalProps) 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center justify-between">
-            Adicionar Novo Imóvel
-            <Button variant="ghost" size="sm" onClick={() => onOpenChange(false)}>
-              <X size={16} />
-            </Button>
-          </DialogTitle>
+          <DialogTitle>Adicionar Novo Imóvel</DialogTitle>
         </DialogHeader>
         
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
