@@ -80,7 +80,19 @@ export class MemStorage implements IStorage {
 
   async createLead(insertLead: InsertLead): Promise<Lead> {
     const id = this.currentLeadId++;
-    const lead: Lead = { ...insertLead, id };
+    const lead: Lead = { 
+      ...insertLead, 
+      id,
+      email: insertLead.email || null,
+      status: insertLead.status || "novo",
+      professionalType: insertLead.professionalType || null,
+      maritalStatus: insertLead.maritalStatus || null,
+      grossIncome: insertLead.grossIncome || null,
+      interestRegions: insertLead.interestRegions || null,
+      interestedProperty: insertLead.interestedProperty || null,
+      downPayment: insertLead.downPayment || null,
+      documents: insertLead.documents || null
+    };
     this.leads.set(id, lead);
     return lead;
   }
@@ -109,7 +121,24 @@ export class MemStorage implements IStorage {
 
   async createProperty(insertProperty: InsertProperty): Promise<Property> {
     const id = this.currentPropertyId++;
-    const property: Property = { ...insertProperty, id };
+    const property: Property = { 
+      ...insertProperty, 
+      id,
+      code: insertProperty.code || null,
+      status: insertProperty.status || "disponivel",
+      description: insertProperty.description || null,
+      evaluationPrice: insertProperty.evaluationPrice || null,
+      condominiumFee: insertProperty.condominiumFee || null,
+      iptu: insertProperty.iptu || null,
+      builder: insertProperty.builder || null,
+      bedrooms: insertProperty.bedrooms || null,
+      bathrooms: insertProperty.bathrooms || null,
+      garages: insertProperty.garages || null,
+      squareMeters: insertProperty.squareMeters || null,
+      amenities: insertProperty.amenities || null,
+      images: insertProperty.images || null,
+      referencePoints: insertProperty.referencePoints || null
+    };
     this.properties.set(id, property);
     return property;
   }
@@ -138,7 +167,11 @@ export class MemStorage implements IStorage {
 
   async createSale(insertSale: InsertSale): Promise<Sale> {
     const id = this.currentSaleId++;
-    const sale: Sale = { ...insertSale, id };
+    const sale: Sale = { 
+      ...insertSale, 
+      id,
+      status: insertSale.status || "em_processo"
+    };
     this.sales.set(id, sale);
     return sale;
   }
@@ -166,7 +199,8 @@ export class MemStorage implements IStorage {
     const message: Message = { 
       ...insertMessage, 
       id,
-      timestamp: new Date()
+      timestamp: new Date(),
+      messageType: insertMessage.messageType || "text"
     };
     this.messages.set(id, message);
     return message;

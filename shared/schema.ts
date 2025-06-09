@@ -61,10 +61,35 @@ export const messages = pgTable("messages", {
 
 export const insertLeadSchema = createInsertSchema(leads).omit({
   id: true,
+}).extend({
+  email: z.string().nullable().optional(),
+  status: z.string().nullable().optional(),
+  professionalType: z.string().nullable().optional(),
+  maritalStatus: z.string().nullable().optional(),
+  grossIncome: z.string().nullable().optional(),
+  interestRegions: z.array(z.string()).nullable().optional(),
+  interestedProperty: z.string().nullable().optional(),
+  downPayment: z.string().nullable().optional(),
+  documents: z.array(z.string()).nullable().optional(),
 });
 
 export const insertPropertySchema = createInsertSchema(properties).omit({
   id: true,
+}).extend({
+  code: z.string().nullable().optional(),
+  status: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
+  evaluationPrice: z.string().nullable().optional(),
+  condominiumFee: z.string().nullable().optional(),
+  iptu: z.string().nullable().optional(),
+  builder: z.string().nullable().optional(),
+  bedrooms: z.number().nullable().optional(),
+  bathrooms: z.number().nullable().optional(),
+  garages: z.number().nullable().optional(),
+  squareMeters: z.string().nullable().optional(),
+  amenities: z.array(z.string()).nullable().optional(),
+  images: z.array(z.string()).nullable().optional(),
+  referencePoints: z.array(z.string()).nullable().optional(),
 });
 
 export const insertSaleSchema = createInsertSchema(sales).omit({
